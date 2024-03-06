@@ -397,9 +397,9 @@ class CheckboxSelectionWidgetState
       handleOnChanged: _handleOnChanged,
       tristate: _tristate,
       scale: 0.86,
-      unselectedColor: stateManager.configuration.style.iconColor,
-      activeColor: stateManager.configuration.style.activatedBorderColor,
-      checkColor: stateManager.configuration.style.activatedColor,
+      unselectedColor: stateManager.configuration.style.checkboxUnselectedColor,
+      activeColor: stateManager.configuration.style.checkboxActiveColor,
+      checkColor: stateManager.configuration.style.checkboxCheckColor,
     );
   }
 }

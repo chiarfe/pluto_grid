@@ -38,7 +38,7 @@ class PlutoScaledCheckbox extends StatelessWidget {
           value: value,
           tristate: tristate,
           onChanged: handleOnChanged,
-          activeColor: value == null ? unselectedColor : activeColor,
+          activeColor: activeColor,
           checkColor: checkColor,
         ),
       ),
