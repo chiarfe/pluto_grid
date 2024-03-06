@@ -255,25 +255,30 @@ class PlutoColumnFilterState extends PlutoStateWithChange<PlutoColumnFilter> {
         child: Padding(
           padding: _padding,
           child: Center(
-            child: TextField(
-              focusNode: _focusNode,
-              controller: _controller,
-              enabled: _enabled,
-              style: style.cellTextStyle,
-              onTap: _handleOnTap,
-              onChanged: _handleOnChanged,
-              onEditingComplete: _handleOnEditingComplete,
-              decoration: InputDecoration(
-                hintText: _enabled ? widget.column.defaultFilter.title : '',
-                filled: true,
-                fillColor: _textFieldColor,
-                border: _border,
-                enabledBorder: _border,
-                disabledBorder: _disabledBorder,
-                focusedBorder: _enabledBorder,
-                contentPadding: const EdgeInsets.all(5),
-              ),
-            ),
+            child: widget.stateManager.configuration.columnFilter.renderer != null
+                ? widget.stateManager.configuration.columnFilter.renderer!(PlutoColumnFilterRendererContext(
+                    column: widget.column,
+                    stateManager: widget.stateManager,
+                  ))
+                : TextField(
+                    focusNode: _focusNode,
+                    controller: _controller,
+                    enabled: _enabled,
+                    style: style.cellTextStyle,
+                    onTap: _handleOnTap,
+                    onChanged: _handleOnChanged,
+                    onEditingComplete: _handleOnEditingComplete,
+                    decoration: InputDecoration(
+                      hintText: _enabled ? widget.column.defaultFilter.title : '',
+                      filled: true,
+                      fillColor: _textFieldColor,
+                      border: _border,
+                      enabledBorder: _border,
+                      disabledBorder: _disabledBorder,
+                      focusedBorder: _enabledBorder,
+                      contentPadding: const EdgeInsets.all(5),
+                    ),
+                  ),
           ),
         ),
       ),

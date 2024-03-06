@@ -766,6 +766,20 @@ typedef PlutoGridResolveDefaultColumnFilter = PlutoFilterType Function(
   PlutoGridColumnFilterResolver resolver,
 );
 
+class PlutoColumnFilterRendererContext {
+  final PlutoColumn? column;
+
+  final PlutoGridStateManager stateManager;
+
+  PlutoColumnFilterRendererContext({
+    required this.column,
+    required this.stateManager,
+  });
+}
+
+typedef PlutoColumnFilterRenderer = Widget Function(
+    PlutoColumnFilterRendererContext context);
+
 class PlutoGridColumnFilterConfig {
   /// # Set the filter information of the column.
   ///
@@ -819,6 +833,7 @@ class PlutoGridColumnFilterConfig {
     List<PlutoFilterType>? filters,
     PlutoGridResolveDefaultColumnFilter? resolveDefaultColumnFilter,
     int? debounceMilliseconds,
+    this.renderer,
   })  : _userFilters = filters,
         _userResolveDefaultColumnFilter = resolveDefaultColumnFilter,
         _debounceMilliseconds = debounceMilliseconds == null
@@ -832,6 +847,8 @@ class PlutoGridColumnFilterConfig {
   final PlutoGridResolveDefaultColumnFilter? _userResolveDefaultColumnFilter;
 
   final int _debounceMilliseconds;
+
+  final PlutoColumnFilterRenderer? renderer;
 
   bool get hasUserFilter => _userFilters != null && _userFilters!.isNotEmpty;
 

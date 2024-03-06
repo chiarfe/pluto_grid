@@ -163,7 +163,7 @@ List<PopupMenuEntry<PlutoGridColumnMenuItem>> _getDefaultColumnMenuItems({
         value: PlutoGridColumnMenuItem.resetFilter,
         text: localeText.resetFilter,
         textColor: textColor,
-        enabled: stateManager.hasFilter,
+        enabled: true, //stateManager.hasFilter,
       ),
     ],
   ];
