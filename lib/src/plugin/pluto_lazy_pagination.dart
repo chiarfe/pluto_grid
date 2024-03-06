@@ -5,8 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 
 /// Callback function to implement to add lazy pagination data.
-typedef PlutoLazyPaginationFetch = Future<PlutoLazyPaginationResponse> Function(
-    PlutoLazyPaginationRequest);
+typedef PlutoLazyPaginationFetch = Future<PlutoLazyPaginationResponse> Function(PlutoLazyPaginationRequest);
 
 /// Request data for lazy pagination processing.
 class PlutoLazyPaginationRequest {
@@ -79,6 +78,7 @@ class PlutoLazyPagination extends StatefulWidget {
     this.pageSizeToMove,
     required this.fetch,
     required this.stateManager,
+    this.pageCountBuilder,
     super.key,
   });
 
@@ -111,6 +111,8 @@ class PlutoLazyPagination extends StatefulWidget {
   final PlutoLazyPaginationFetch fetch;
 
   final PlutoGridStateManager stateManager;
+
+  final Widget Function()? pageCountBuilder;
 
   @override
   State<PlutoLazyPagination> createState() => _PlutoLazyPaginationState();
@@ -158,8 +160,7 @@ class _PlutoLazyPaginationState extends State<PlutoLazyPagination> {
   }
 
   void _eventListener(PlutoGridEvent event) {
-    if (event is PlutoGridChangeColumnSortEvent ||
-        event is PlutoGridSetColumnFilterEvent) {
+    if (event is PlutoGridChangeColumnSortEvent || event is PlutoGridSetColumnFilterEvent) {
       setPage(1);
     }
   }
@@ -209,6 +210,7 @@ class _PlutoLazyPaginationState extends State<PlutoLazyPagination> {
       totalPage: _totalPage,
       pageSizeToMove: widget.pageSizeToMove,
       setPage: setPage,
+      pageCountBuilder: widget.pageCountBuilder,
     );
   }
 }
@@ -224,6 +226,7 @@ class _PaginationWidget extends StatefulWidget {
     required this.totalPage,
     this.pageSizeToMove,
     required this.setPage,
+    this.pageCountBuilder,
   });
 
   final Color iconColor;
@@ -249,6 +252,8 @@ class _PaginationWidget extends StatefulWidget {
   final int? pageSizeToMove;
 
   final void Function(int page) setPage;
+
+  final Widget Function()? pageCountBuilder;
 
   @override
   State<_PaginationWidget> createState() => _PaginationWidgetState();
@@ -387,57 +392,56 @@ class _PaginationWidgetState extends State<_PaginationWidget> {
         return SizedBox(
           width: size.maxWidth,
           height: widget.height,
-          child: Align(
-            alignment: Alignment.center,
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: [
-                  IconButton(
-                    onPressed: _isFirstPage ? null : _firstPage,
-                    icon: const Icon(Icons.first_page),
-                    color: widget.iconColor,
-                    disabledColor: widget.disabledIconColor,
-                    splashRadius: _iconSplashRadius,
-                    mouseCursor: _isFirstPage
-                        ? SystemMouseCursors.basic
-                        : SystemMouseCursors.click,
-                  ),
-                  IconButton(
-                    onPressed: _isFirstPage ? null : _beforePage,
-                    icon: const Icon(Icons.navigate_before),
-                    color: widget.iconColor,
-                    disabledColor: widget.disabledIconColor,
-                    splashRadius: _iconSplashRadius,
-                    mouseCursor: _isFirstPage
-                        ? SystemMouseCursors.basic
-                        : SystemMouseCursors.click,
-                  ),
-                  ..._pageNumbers.map(_makeNumberButton),
-                  IconButton(
-                    onPressed: _isLastPage ? null : _nextPage,
-                    icon: const Icon(Icons.navigate_next),
-                    color: widget.iconColor,
-                    disabledColor: widget.disabledIconColor,
-                    splashRadius: _iconSplashRadius,
-                    mouseCursor: _isLastPage
-                        ? SystemMouseCursors.basic
-                        : SystemMouseCursors.click,
-                  ),
-                  IconButton(
-                    onPressed: _isLastPage ? null : _lastPage,
-                    icon: const Icon(Icons.last_page),
-                    color: widget.iconColor,
-                    disabledColor: widget.disabledIconColor,
-                    splashRadius: _iconSplashRadius,
-                    mouseCursor: _isLastPage
-                        ? SystemMouseCursors.basic
-                        : SystemMouseCursors.click,
-                  ),
-                ],
+          child: Stack(children: [
+            if (widget.pageCountBuilder != null)
+              Align(
+                alignment: Alignment.centerLeft,
+                child: widget.pageCountBuilder!(),
               ),
-            ),
-          ),
+            Align(
+              alignment: Alignment.center,
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    IconButton(
+                      onPressed: _isFirstPage ? null : _firstPage,
+                      icon: const Icon(Icons.first_page),
+                      color: widget.iconColor,
+                      disabledColor: widget.disabledIconColor,
+                      splashRadius: _iconSplashRadius,
+                      mouseCursor: _isFirstPage ? SystemMouseCursors.basic : SystemMouseCursors.click,
+                    ),
+                    IconButton(
+                      onPressed: _isFirstPage ? null : _beforePage,
+                      icon: const Icon(Icons.navigate_before),
+                      color: widget.iconColor,
+                      disabledColor: widget.disabledIconColor,
+                      splashRadius: _iconSplashRadius,
+                      mouseCursor: _isFirstPage ? SystemMouseCursors.basic : SystemMouseCursors.click,
+                    ),
+                    ..._pageNumbers.map(_makeNumberButton).toList(growable: false),
+                    IconButton(
+                      onPressed: _isLastPage ? null : _nextPage,
+                      icon: const Icon(Icons.navigate_next),
+                      color: widget.iconColor,
+                      disabledColor: widget.disabledIconColor,
+                      splashRadius: _iconSplashRadius,
+                      mouseCursor: _isLastPage ? SystemMouseCursors.basic : SystemMouseCursors.click,
+                    ),
+                    IconButton(
+                      onPressed: _isLastPage ? null : _lastPage,
+                      icon: const Icon(Icons.last_page),
+                      color: widget.iconColor,
+                      disabledColor: widget.disabledIconColor,
+                      splashRadius: _iconSplashRadius,
+                      mouseCursor: _isLastPage ? SystemMouseCursors.basic : SystemMouseCursors.click,
+                    ),
+                  ],
+                ),
+              ),
+            )
+          ]),
         );
       },
     );
