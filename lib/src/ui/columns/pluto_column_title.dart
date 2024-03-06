@@ -557,8 +557,8 @@ class _ColumnTextWidgetState extends PlutoStateWithChange<_ColumnTextWidget> {
       ),
       style: stateManager.configuration.style.columnTextStyle,
       overflow: TextOverflow.ellipsis,
-      softWrap: false,
-      maxLines: 1,
+      softWrap: true,
+      maxLines: 2,
       textAlign: widget.column.titleTextAlign.value,
     );
   }
