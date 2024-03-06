@@ -348,8 +348,8 @@ class _ColumnWidget extends StatelessWidget {
       stateManager.configuration.style.defaultColumnTitlePadding;
 
   bool get showSizedBoxForIcon =>
-      column.isShowRightIcon &&
-      (column.titleTextAlign.isRight || stateManager.isRTL);
+      column.isShowRightIcon /*&& 
+      (column.titleTextAlign.isRight || stateManager.isRTL)*/;
 
   @override
   Widget build(BuildContext context) {
